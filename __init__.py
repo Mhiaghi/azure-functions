@@ -2,15 +2,16 @@
 import logging
 import requests
 import azure.functions as func
-import mysql.connector
+import pymysql
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    cnx = mysql.connector.connect(
+    cnx = pymysql.connect(
         user = "Mhiaghi",
         password = 'Miguel123',
         host = 'msaturno-database.mysql.database.azure.com',
-        port = 3306
+        port = 3306,
+	database = 'SEIDORLAB'
     )
     logging.info(cnx)
     cursor = cnx.cursor()
@@ -20,7 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     medida = req.params.get('medida_IoT')
     fecha_entrada = req.params.get('fecha_entrada_IoT')
     fecha_salida = req.params.get('fecha_salida_IoT')
-    cursor.execute("USE SEIDORLAB")
+    
     if not tipo:
         try:
             req_body = req.get_json()
@@ -35,7 +36,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             fecha_salida = req_body.get('fecha_salida_IoT')
             
     if tipo:
-        cursor.execute("INSERT INTO devices VALUES ('%s','%f', '%s','%s','%s')"% (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+        cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+	    cnx.commit()
         return func.HttpResponse(f"Hello, {codigo}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
