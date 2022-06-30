@@ -38,6 +38,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if tipo:
         try:
             cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+            cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
             cnx.commit()
         except pymysql.IntegrityError:
             print("Error")
