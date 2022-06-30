@@ -36,8 +36,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             fecha_salida = req_body.get('fecha_salida_IoT')
             
     if tipo:
-        cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
-	    cnx.commit()
+        try:
+            cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+	        cnx.commit()
+        except pymysql.IntegrityError:
+            print("Error")
         return func.HttpResponse(f"Hello, {codigo}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
