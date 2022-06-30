@@ -3,7 +3,7 @@ import logging
 import requests
 import azure.functions as func
 import pymysql
-from datetime import datetime
+#from datetime import datetime
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -36,9 +36,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             
     if tipo:
         try:
-            now = datetime.now()
-            fecha_salida = now.strftime("%Y/%m/%d %H:%M%S")
-            cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+            #now = datetime.now()
+            #fecha_salida = now.strftime("%Y/%m/%d %H:%M%S")
+            fecha_saloda = '2020-01-01 10:00:00'
+            cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
             cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
             cnx.commit()
         except pymysql.IntegrityError:
