@@ -3,6 +3,7 @@ import logging
 import requests
 import azure.functions as func
 import pymysql
+from datetime import datetime
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -20,7 +21,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     valor = req.params.get('valor_IoT')
     medida = req.params.get('medida_IoT')
     fecha_entrada = req.params.get('fecha_entrada_IoT')
-    fecha_salida = req.params.get('fecha_salida_IoT')
     
     if not tipo:
         try:
@@ -33,10 +33,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             valor = req_body.get('valor_IoT')
             medida = req_body.get('medida_IoT')
             fecha_entrada = req_body.get('fecha_entrada_IoT')
-            fecha_salida = req_body.get('fecha_salida_IoT')
             
     if tipo:
         try:
+            now = datetime.now()
+            fecha_salida = now.strftime("%Y/%m/%d %H:%M%S")
             cursor.execute("INSERT INTO devices VALUES ('%s','%s','%f', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
             cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
             cnx.commit()
