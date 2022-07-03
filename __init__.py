@@ -38,13 +38,13 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         try:
             #now = datetime.now()
             #fecha_salida = now.strftime("%Y/%m/%d %H:%M%S")
-            fecha_saloda = '2020-01-01 10:00:00'
-            cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
-            cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
-            cnx.commit()
+            fecha_salida = '2020-01-01 10:00:00'
+            #cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+            #cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
+            #cnx.commit()
         except pymysql.IntegrityError:
             print("Error")
-        return func.HttpResponse(f"Hello, {codigo}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(f"Hello, {type(codigo)}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
