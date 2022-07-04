@@ -1,7 +1,5 @@
 #TEST 02
-from asyncio.windows_events import NULL
 import logging
-from queue import Empty
 import requests
 import azure.functions as func
 import pymysql
@@ -40,11 +38,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         except ValueError:
             pass
         else:
-            tipo = req_body.get('tipo_IoT')
-            codigo = req_body.get('codigo_IoT')
-            valor = req_body.get('valor_IoT')
-            medida = req_body.get('medida_IoT')
-            fecha_entrada = req_body.get('fecha_entrada')
+            try:
+                tipo = req_body.get('tipo_IoT')
+                codigo = req_body.get('codigo_IoT')
+                valor = req_body.get('valor_IoT')
+                medida = req_body.get('medida_IoT')
+                fecha_entrada = req_body.get('fecha_entrada')
+            except:
+                return func.HttpResponse(
+                "Mensaje Nulo",
+                status_code=200
+                )
             
     if tipo:
         try:
