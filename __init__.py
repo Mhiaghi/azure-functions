@@ -1,4 +1,5 @@
 #TEST 02
+from asyncio.windows_events import NULL
 import logging
 from queue import Empty
 import requests
@@ -9,12 +10,8 @@ from datetime import datetime, timedelta
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
+
     logging.info('Python HTTP trigger function processed a request.')
-    if(req is Empty):
-        return func.HttpResponse(
-            "Empty JSON",
-            status_code=200
-        )
     cnx = pymysql.connect(
         user = "Mhiaghi",
         password = 'Miguel123',
@@ -24,11 +21,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     )
     logging.info(cnx)
     cursor = cnx.cursor()
-    tipo = req.params.get('tipo_IoT')	
-    codigo = req.params.get('codigo_IoT')
-    valor = req.params.get('valor_IoT')
-    medida = req.params.get('medida_IoT')
-    fecha_entrada = req.params.get('fecha_entrada')
+    try:
+        tipo = req.params.get('tipo_IoT')	
+        codigo = req.params.get('codigo_IoT')
+        valor = req.params.get('valor_IoT')
+        medida = req.params.get('medida_IoT')
+        fecha_entrada = req.params.get('fecha_entrada')
+    except:
+        return func.HttpResponse(
+            "Mensaje Nulo",
+            status_code=200
+        )
 
 
     if not tipo:
