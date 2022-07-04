@@ -1,12 +1,20 @@
 #TEST 02
 import logging
+from queue import Empty
 import requests
 import azure.functions as func
 import pymysql
 from datetime import datetime, timedelta
 
+
+
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
+    if(req is Empty):
+        return func.HttpResponse(
+            "Empty JSON",
+            status_code=200
+        )
     cnx = pymysql.connect(
         user = "Mhiaghi",
         password = 'Miguel123',
@@ -21,7 +29,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     valor = req.params.get('valor_IoT')
     medida = req.params.get('medida_IoT')
     fecha_entrada = req.params.get('fecha_entrada')
-    
+
+
     if not tipo:
         try:
             req_body = req.get_json()
