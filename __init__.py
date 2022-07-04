@@ -39,9 +39,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             now = datetime.now()
             now = now - timedelta(hours= 5)
             fecha_salida = now.strftime("%Y-%m-%d %H:%M:%S")
+            fecha_entrada = fecha_entrada = fecha_entrada[0:10] + " " + fecha_entrada[11:19]
             cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
             cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
-            fecha_entrada = fecha_entrada = fecha_entrada[0:10] + " " + fecha_entrada[11:19]
+            
             cnx.commit()
         except pymysql.IntegrityError:
             print("Error")
