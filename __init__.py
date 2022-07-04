@@ -37,7 +37,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     if tipo:
         try:
             now = datetime.now()
-            the_timezone = timezone("America/Lima")
             now = now - timedelta(hours= 5)
             fecha_salida = now.strftime("%Y-%m-%d %H:%M:%S")
             #fecha_salida = '2020-01-01 10:00:00'
