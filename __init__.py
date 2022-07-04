@@ -5,8 +5,6 @@ import azure.functions as func
 import pymysql
 from datetime import datetime, timedelta
 
-
-
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.info('Python HTTP trigger function processed a request.')
@@ -39,32 +37,28 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             pass
         else:
             try:
-                tipo = req_body.get('tipo_IoT')
-                codigo = req_body.get('codigo_IoT')
-                valor = req_body.get('valor_IoT')
-                medida = req_body.get('medida_IoT')
-                fecha_entrada = req_body.get('fecha_entrada')
+                for texto in req_body:
+                    tipo = texto.get('tipo_IoT')
+                    codigo = texto.get('codigo_IoT')
+                    valor = texto.get('valor_IoT')
+                    medida = texto.get('medida_IoT')
+                    fecha_entrada = texto.get('fecha_entrada')
+                    now = datetime.now()
+                    now = now - timedelta(hours= 5)
+                    fecha_salida = now.strftime("%Y-%m-%d %H:%M:%S")
+                    fecha_entrada = fecha_entrada = fecha_entrada[0:10] + " " + fecha_entrada[11:19]
+                    try:
+                        cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
+                        cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
+                        cnx.commit()
+                    except pymysql.IntegrityError:
+                        return func.HttpResponse(
+                        "Error en base de datos",
+                        status_code=200
+                        )
             except:
                 return func.HttpResponse(
                 "Mensaje Nulo",
                 status_code=200
                 )
             
-    if tipo:
-        try:
-            now = datetime.now()
-            now = now - timedelta(hours= 5)
-            fecha_salida = now.strftime("%Y-%m-%d %H:%M:%S")
-            fecha_entrada = fecha_entrada = fecha_entrada[0:10] + " " + fecha_entrada[11:19]
-            cursor.execute("INSERT INTO devices VALUES ('%s','%s','%s', '%s','%s','%s') " % (tipo,codigo,valor,medida,fecha_entrada,fecha_salida))
-            cursor.execute("CALL eliminarultimasfilas('%s') " % (codigo))
-            
-            cnx.commit()
-        except pymysql.IntegrityError:
-            print("Error")
-        return func.HttpResponse(f"Hello, {codigo}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-            "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-            status_code=200
-        )
