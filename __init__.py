@@ -44,7 +44,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             #cnx.commit()
         except pymysql.IntegrityError:
             print("Error")
-        return func.HttpResponse(f"Hello, {type(fecha_salida)}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse(f"Hello, {fecha_salida}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
