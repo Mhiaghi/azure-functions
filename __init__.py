@@ -20,7 +20,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     codigo = req.params.get('codigo_IoT')
     valor = req.params.get('valor_IoT')
     medida = req.params.get('medida_IoT')
-    fecha_entrada = req.params.get('fecha_entrada_IoT')
+    fecha_entrada = req.params.get('fecha_entrada')
     
     if not tipo:
         try:
@@ -32,7 +32,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             codigo = req_body.get('codigo_IoT')
             valor = req_body.get('valor_IoT')
             medida = req_body.get('medida_IoT')
-            fecha_entrada = req_body.get('fecha_entrada_IoT')
+            fecha_entrada = req_body.get('fecha_entrada')
             
     if tipo:
         try:
